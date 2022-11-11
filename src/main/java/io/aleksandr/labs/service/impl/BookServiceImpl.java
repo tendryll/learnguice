@@ -8,9 +8,11 @@ import io.aleksandr.labs.repository.BookRepository;
 import io.aleksandr.labs.service.BookService;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Singleton
 public class BookServiceImpl implements BookService {
+  private final AtomicLong aLong = new AtomicLong();
   private final BookRepository bookRepository;
 
   @Inject
@@ -19,8 +21,9 @@ public class BookServiceImpl implements BookService {
   }
 
   @Override
-  public void create(final Book book) {
-    bookRepository.create(book);
+  public long create(final Book book) {
+    book.setId(aLong.getAndIncrement());
+    return bookRepository.create(book);
   }
 
   @Override
@@ -35,7 +38,8 @@ public class BookServiceImpl implements BookService {
 
   @Override
   public List<Book> find(final String tag) {
-    return bookRepository.find(tag);
+    final List<Book> books =  bookRepository.find(tag);
+    return books;
   }
 
   @Override

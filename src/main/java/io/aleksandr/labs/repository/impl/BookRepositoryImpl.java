@@ -15,25 +15,43 @@ public class BookRepositoryImpl implements BookRepository {
   private final Set<Book> library = new HashSet<>();
 
   @Override
-  public void create(final Book book) {
+  public long create(final Book book) {
     if (book != null) {
-      library.add(book);
+      final Book bk = new Book();
+
+      bk.setId(book.getId());
+      bk.setTitle(book.getTitle());
+      bk.setDescription(book.getDescription());
+      bk.setTags(book.getTags());
+      bk.setIsbn10(book.getIsbn10());
+      bk.setIsbn13(book.getIsbn13());
+
+      library.add(bk);
+
+      return book.getId();
     }
+
+    return -1;
   }
 
   @Override
-  public void update(final Book book) {
-    if (book != null) {
-      final Optional<Book> found = library.stream().filter(bk -> bk.getId() == book.getId()).findFirst();
+  public Book update(final Book book) {
+    Book found = null;
 
-      if (found.isPresent()) {
-        found.get().setTitle(book.getTitle());
-        found.get().setDescription(book.getDescription());
-        found.get().setTags(book.getTags());
-        found.get().setIsbn10(book.getIsbn10());
-        found.get().setIsbn13(book.getIsbn13());
+    if (book != null) {
+      final Optional<Book> opt = library.stream().filter(bk -> bk.getId() == book.getId()).findFirst();
+
+      if (opt.isPresent()) {
+        found = opt.get();
+        found.setTitle(book.getTitle());
+        found.setDescription(book.getDescription());
+        found.setTags(book.getTags());
+        found.setIsbn10(book.getIsbn10());
+        found.setIsbn13(book.getIsbn13());
       }
     }
+
+    return found;
   }
 
   @Override
@@ -42,8 +60,8 @@ public class BookRepositoryImpl implements BookRepository {
   }
 
   @Override
-  public List<Book> find(final String genre) {
-    return library.stream().filter(bk -> bk.getTags().contains(genre)).collect(Collectors.toList());
+  public List<Book> find(final String tag) {
+    return library.stream().filter(bk -> bk.getTags().contains(tag)).collect(Collectors.toList());
   }
 
   @Override

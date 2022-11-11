@@ -1,19 +1,31 @@
-package io.aleksandr.labs;
+package io.aleksandr.labs.service.impl;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import io.aleksandr.labs.config.AppModule;
 import io.aleksandr.labs.controller.BookController;
 import io.aleksandr.labs.model.Book;
+import io.aleksandr.labs.service.BookService;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-public class Launch {
-  public static void main(String[] args) {
-    final Injector injector = Guice.createInjector(new AppModule());
+import static org.junit.Assert.*;
 
+public class BookServiceImplTest {
+  private Injector injector;
+
+  @Before
+  public void init() {
+    injector = Guice.createInjector(new AppModule());
+  }
+
+  @Test
+  public void find() {
     final Set<String> tags1 = new HashSet<>(Arrays.asList("kubernetes", "orchestration"));
     final Set<String> tags2 = new HashSet<>(Arrays.asList("radical", "candor"));
     final Set<String> tags3 = new HashSet<>(Arrays.asList("reliability", "security", "orchestration"));
@@ -48,11 +60,12 @@ public class Launch {
     book3.setIsbn10("1950508404");
     book3.setIsbn13("978-1950508402");
 
-    final BookController controller = injector.getInstance(BookController.class);
-    controller.create(book1);
-    controller.create(book2);
-    controller.create(book3);
+    final BookService service = injector.getInstance(BookService.class);
+    service.create(book1);
+    service.create(book2);
+    service.create(book3);
 
-    controller.find("orchestration").forEach(System.out::println);
+    final List<Book> books = service.find("orchestration");
+    assertEquals(2, books.size());
   }
 }

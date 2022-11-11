@@ -5,9 +5,9 @@ import io.aleksandr.labs.model.Book;
 import java.util.List;
 
 public interface BookRepository {
-  void create(final Book book);
+  long create(final Book book);
 
-  void update(final Book book);
+  Book update(final Book book);
 
   Book get(final long id);
 

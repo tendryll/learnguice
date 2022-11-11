@@ -5,7 +5,7 @@ import io.aleksandr.labs.model.Book;
 import java.util.List;
 
 public interface BookService {
-  void create(final Book book);
+  long create(final Book book);
 
   void update(final Book book);
 

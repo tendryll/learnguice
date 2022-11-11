@@ -2,7 +2,9 @@ package io.aleksandr.labs.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Book {
@@ -11,7 +13,7 @@ public class Book {
   private long id;
   private String title;
   private String description;
-  private Set<String> tags;
+  private Set<String> tags = new HashSet<>();
   private String isbn10;
   private String isbn13;
 
@@ -44,7 +46,9 @@ public class Book {
   }
 
   public void setTags(final Set<String> tags) {
-    this.tags = tags;
+    if (tags != null) {
+      this.tags = tags;
+    }
   }
 
   public String getIsbn10() {
@@ -85,5 +89,17 @@ public class Book {
   public int hashCode() {
     return new HashCodeBuilder(INITIAL_ODD_NUMBER, MULTIPLIER_ODD_NUMBER).append(getId()).append(getTitle())
         .append(getDescription()).append(getTags()).append(getIsbn10()).append(getIsbn13()).toHashCode();
+  }
+
+  @Override
+  public String toString() {
+    return new ToStringBuilder(this)
+        .append("id", id)
+        .append("title", title)
+        .append("description", description)
+        .append("tags", tags)
+        .append("isbn10", isbn10)
+        .append("isbn13", isbn13)
+        .toString();
   }
 }
